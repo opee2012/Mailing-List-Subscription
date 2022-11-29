@@ -13,14 +13,29 @@
         return $lines;
     }
 
-
     $csv = csvToArray();
 
-    foreach ($csv as $line){
-        if ($line[1] == $confirm){
-            echo $confirm;
+    for ($i = 0; $i < sizeof($csv); $i++) {
+        if ($csv[$i][1] == $confirm) {
+            $csv[$i][2] = "true";
+            $email = $csv[$i][0];
+
+            $msg = "Thank you for confirming your email. You are now subscribed and will begin receiving emails from us.
+                    \nThank you,\nMailing List Company";
+
+            $msg = wordwrap($msg, 70);
+
+            mail($email, "Email Confirmed", $msg);
         }
     }
+
+    $file = fopen("subscriptions.csv","w");
+
+    foreach ($csv as $line) {
+        fputcsv($file, $line);
+    }
+
+    fclose($file)
 ?>
 
 <!DOCTYPE html>
